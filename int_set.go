@@ -2,27 +2,32 @@ package set
 
 import "sync"
 
+// Int is a set for elements of type int
 type Int struct {
 	content map[int]bool
 	mu      sync.Mutex
 }
 
+// NewIntSet returns a pointer on a new Int
 func NewIntSet() *Int {
 	return &Int{content: make(map[int]bool)}
 }
 
+// Add adds an element to the set
 func (is *Int) Add(i int) {
 	is.mu.Lock()
 	defer is.mu.Unlock()
 	is.content[i] = true
 }
 
+// Remove removes an element from the set
 func (is *Int) Remove(i int) {
 	is.mu.Lock()
 	defer is.mu.Unlock()
 	delete(is.content, i)
 }
 
+// Contains tests if a given element is in the set
 func (is *Int) Contains(i int) bool {
 	is.mu.Lock()
 	defer is.mu.Unlock()
