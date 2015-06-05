@@ -1,6 +1,11 @@
 #! /usr/bin/env ruby
 # -*- coding: UTF-8 -*-
 
+if ARGV.length != 1 || ARGV.first.empty? ||  ARGV.first.length < 2
+    puts "Usage: #{$0} <type>"
+    exit 1
+end
+
 template = <<-EOS
 package set
 
@@ -40,14 +45,10 @@ func (%RECEIVER% *%STRUCT%) Contains(%ELEMENT% %TYPE%) bool {
 }
 EOS
 
-if ARGV.length != 1 || ARGV.first.empty? ||  ARGV.first.length < 2
-    puts "Usage: #{$0} <type>"
-    exit 1
-end
-
 type = ARGV.first
 element = type[0]
 receiver = "#{element}s"
+# note: this won't work with already-capitalized types
 struct = type.capitalize
 
 text = template.
