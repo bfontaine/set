@@ -4,7 +4,7 @@ Package `set` provides an ultra-simple set implementation in Go.
 
 ## Features
 
-* Support for `string` and `int`
+* `int` and `string` sets
 * Thread-safe
 * `Add`, `Remove`, `Contains`. That’s all.
 
