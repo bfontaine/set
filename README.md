@@ -1,5 +1,7 @@
 # Set
 
+[![GoDoc](https://godoc.org/github.com/bfontaine/set?status.svg)](https://godoc.org/github.com/bfontaine/set)
+
 Package `set` provides an ultra-simple set implementation in Go.
 
 ## Features
@@ -14,13 +16,15 @@ Package `set` provides an ultra-simple set implementation in Go.
 
 ## Usage
 
-    s := set.NewStringSet()
-    s.Add("foo")
-    s.Add("bar")
-    s.Contains("foo") // true
-    s.Contains("qux") // false
-    s.Remove("foo")
-    s.Contains("foo") // false
+```go
+s := set.NewStringSet()
+s.Add("foo")
+s.Add("bar")
+s.Contains("foo") // true
+s.Contains("qux") // false
+s.Remove("foo")
+s.Contains("foo") // false
+```
 
 ## Alternatives
 
