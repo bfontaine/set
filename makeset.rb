@@ -17,7 +17,7 @@ type %STRUCT% struct {
 	mu      sync.Mutex
 }
 
-// New%STRUCT%Set returns a pointer on a new %STRUCT%
+// New%STRUCT%Set returns a pointer on a new %STRUCT%Set
 func New%STRUCT%Set() *%STRUCT% {
 	return &%STRUCT%{content: make(map[%TYPE%]bool)}
 }
