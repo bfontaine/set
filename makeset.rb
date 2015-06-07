@@ -6,7 +6,7 @@ if ARGV.length != 1 || ARGV.first.empty? ||  ARGV.first.length < 2
     exit 1
 end
 
-template = <<-EOS
+source_template = <<-EOS
 package set
 
 import "sync"
@@ -45,16 +45,68 @@ func (%RECEIVER% *%STRUCT%) Contains(%ELEMENT% %TYPE%) bool {
 }
 EOS
 
+test_template = <<-EOS
+package set
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func Test%STRUCT%SetCreate(t *testing.T) {
+	%RECEIVER% := New%STRUCT%Set()
+	assert.NotNil(t, %RECEIVER%)
+}
+
+func Test%STRUCT%SetAddContains(t *testing.T) {
+	%RECEIVER% := New%STRUCT%Set()
+	%RECEIVER%.Add(%VAL%)
+	assert.True(t, %RECEIVER%.Contains(%VAL%))
+}
+
+func Test%STRUCT%SetRemove(t *testing.T) {
+	%RECEIVER% := New%STRUCT%Set()
+	%RECEIVER%.Add(%VAL%)
+	assert.True(t, %RECEIVER%.Contains(%VAL%))
+	%RECEIVER%.Remove(%VAL%)
+	assert.False(t, %RECEIVER%.Contains(%VAL%))
+}
+EOS
+
+class Replacer
+  def initialize
+    @repl = {}
+  end
+
+  def replace(**kw)
+    kw.each do |k,v|
+      @repl["%#{k.to_s.upcase}%"] = v
+    end
+  end
+
+  def exec(s, output)
+    @repl.each { |k,v| s = s.gsub(k, v) }
+    File.open(output, "w") { |f| f.write s }
+  end
+end
+
+r = Replacer.new
+
 type = ARGV.first
-element = type[0]
-receiver = "#{element}s"
+
+val = case type
+      when "string"; '"foo"'
+      when "int"; "42"
+      when "float64"; "3.14"
+      end
+
+r.replace :type => type
+r.replace :element => type[0]
+r.replace :receiver => "#{type[0]}s"
 # note: this won't work with already-capitalized types
-struct = type.capitalize
+r.replace :struct => type.capitalize
+r.replace :val => val
 
-text = template.
-    gsub(/%TYPE%/, type).
-    gsub(/%ELEMENT%/, element).
-    gsub(/%RECEIVER%/, receiver).
-    gsub(/%STRUCT%/, struct)
-
-File.open("#{type}_set.go", "w") { |f| f.write(text) }
+r.exec source_template, "#{type}_set.go"
+r.exec test_template, "#{type}_set_test.go"
