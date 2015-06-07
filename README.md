@@ -1,6 +1,7 @@
 # Set
 
 [![GoDoc](https://godoc.org/github.com/bfontaine/set?status.svg)](https://godoc.org/github.com/bfontaine/set)
+[![Build Status](https://travis-ci.org/bfontaine/set.svg?branch=master)](https://travis-ci.org/bfontaine/set)
 
 Package `set` provides an ultra-simple set implementation in Go.
 
