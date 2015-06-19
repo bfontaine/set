@@ -9,7 +9,7 @@ Package `set` provides an ultra-simple set implementation in Go.
 
 * `int` and `string` sets
 * Thread-safe
-* `Add`, `Remove`, `Contains`. That’s all.
+* `Add`, `Remove`, `Contains`, `Size`, `Iterate`. That’s all.
 
 ## Install
 
@@ -37,8 +37,8 @@ s.Contains("foo") // false
 ### Why didn’t you use golang-set?
 
 Because I needed a really simple `string` set and didn’t care about anything
-other than the three operations mentioned above. And golang-set uses
-`interface{}`, which was an unnecessary overhead here.
+other than the operations mentioned above. And golang-set uses `interface{}`,
+which was an unnecessary overhead here.
 
 ### Why is there Ruby code here?
 

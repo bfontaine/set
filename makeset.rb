@@ -49,7 +49,9 @@ func (%RECEIVER% *%STRUCT%) Size() int {
 	return len(%RECEIVER%.content)
 }
 
-// Iterate returns a chan to iterate over all values in the set.
+// Iterate returns a chan to iterate over all values in the set. You can't rely
+// on the order, which can be different between calls. Also, the effect of
+// inserting an element while iterating on the set isn't specified.
 func (%RECEIVER% *%STRUCT%) Iterate() chan %TYPE% {
 	c := make(chan %TYPE%)
 
