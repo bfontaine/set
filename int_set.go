@@ -8,7 +8,7 @@ type Int struct {
 	mu      sync.Mutex
 }
 
-// NewIntSet returns a pointer on a new Int
+// NewIntSet returns a pointer on a new IntSet
 func NewIntSet() *Int {
 	return &Int{content: make(map[int]bool)}
 }
@@ -33,4 +33,23 @@ func (is *Int) Contains(i int) bool {
 	defer is.mu.Unlock()
 	_, ok := is.content[i]
 	return ok
+}
+
+// Size returns the number of elements in the set
+func (is *Int) Size() int {
+	return len(is.content)
+}
+
+// Iterate returns a chan to iterate over all values in the set.
+func (is *Int) Iterate() chan int {
+	c := make(chan int)
+
+	go func() {
+		for i := range is.content {
+			c <- i
+		}
+		close(c)
+	}()
+
+	return c
 }

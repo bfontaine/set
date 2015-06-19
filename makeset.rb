@@ -43,6 +43,25 @@ func (%RECEIVER% *%STRUCT%) Contains(%ELEMENT% %TYPE%) bool {
 	_, ok := %RECEIVER%.content[%ELEMENT%]
 	return ok
 }
+
+// Size returns the number of elements in the set
+func (%RECEIVER% *%STRUCT%) Size() int {
+	return len(%RECEIVER%.content)
+}
+
+// Iterate returns a chan to iterate over all values in the set.
+func (%RECEIVER% *%STRUCT%) Iterate() chan %TYPE% {
+	c := make(chan %TYPE%)
+
+	go func() {
+		for %ELEMENT% := range %RECEIVER%.content {
+			c <- %ELEMENT%
+		}
+		close(c)
+	}()
+
+	return c
+}
 EOS
 
 test_template = <<-EOS
@@ -71,6 +90,21 @@ func Test%STRUCT%SetRemove(t *testing.T) {
 	assert.True(t, %RECEIVER%.Contains(%VAL%))
 	%RECEIVER%.Remove(%VAL%)
 	assert.False(t, %RECEIVER%.Contains(%VAL%))
+}
+
+func Test%STRUCT%SetSize(t *testing.T) {
+	%RECEIVER% := New%STRUCT%Set()
+	assert.Equal(t, 0, %RECEIVER%.Size())
+	%RECEIVER%.Add(%VAL%)
+	assert.Equal(t, 1, %RECEIVER%.Size())
+}
+
+func Test%STRUCT%SetIterate(t *testing.T) {
+	%RECEIVER% := New%STRUCT%Set()
+	%RECEIVER%.Add(%VAL%)
+	for x := range %RECEIVER%.Iterate() {
+		assert.Equal(t, %VAL%, x)
+	}
 }
 EOS
 

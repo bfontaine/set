@@ -8,7 +8,7 @@ type String struct {
 	mu      sync.Mutex
 }
 
-// NewStringSet returns a pointer on a new String
+// NewStringSet returns a pointer on a new StringSet
 func NewStringSet() *String {
 	return &String{content: make(map[string]bool)}
 }
@@ -33,4 +33,23 @@ func (ss *String) Contains(s string) bool {
 	defer ss.mu.Unlock()
 	_, ok := ss.content[s]
 	return ok
+}
+
+// Size returns the number of elements in the set
+func (ss *String) Size() int {
+	return len(ss.content)
+}
+
+// Iterate returns a chan to iterate over all values in the set.
+func (ss *String) Iterate() chan string {
+	c := make(chan string)
+
+	go func() {
+		for s := range ss.content {
+			c <- s
+		}
+		close(c)
+	}()
+
+	return c
 }

@@ -24,3 +24,18 @@ func TestStringSetRemove(t *testing.T) {
 	ss.Remove("foo")
 	assert.False(t, ss.Contains("foo"))
 }
+
+func TestStringSetSize(t *testing.T) {
+	ss := NewStringSet()
+	assert.Equal(t, 0, ss.Size())
+	ss.Add("foo")
+	assert.Equal(t, 1, ss.Size())
+}
+
+func TestStringSetIterate(t *testing.T) {
+	ss := NewStringSet()
+	ss.Add("foo")
+	for x := range ss.Iterate() {
+		assert.Equal(t, "foo", x)
+	}
+}
